@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+# vod-chat-combiner by @dx9er
+# Automates the process of integrating chat replay to a Twitch VOD through TwitchDownloaderCLI.
+
+BEGINNING=0
+MODE="masked" # Default processing mode
+COMBINER_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+COMBINER_ARGS=()
+
+trap "echo; cleanup; exit 130" INT
+
+REGEX_TIMESTAMP="^[0-9]+:[0-9]+:[0-9]+$"
+to_seconds() {
+    [[ $1 =~ $REGEX_TIMESTAMP ]] && \
+        echo -n $(echo $1 | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }') || \
+        echo -n $1
+}
+
+log() {
+    echo -e "+ $*"
+}
+
+log_error() {
+    echo -e "ERROR: $*"
+    exit 1
+}
+
+cleanup() {
+    log "Cleaning up..."
+    rm -rf "$VOD_ID"
+}
+
+get_twitch_dl() {
+    echo -n "$([[ -n $TWITCH_DL_PATH ]] && echo -n "${TWITCH_DL_PATH}/TwitchDownloaderCLI" || echo -n "$(type -p TwitchDownloaderCLI)")"
+}
+
+twitch_dl() {
+    echo -n "$(get_twitch_dl) $* --banner false --temp-path ${COMBINER_DIR}/.temp"
+}
+
+dl_ffmpeg() {
+    local path="${COMBINER_DIR}/bin"
+    [[ ! -e $path ]] && mkdir "$path"
+    log "Checking for ffmpeg..."
+    if [[ ! -e "${path}/ffmpeg" || ! -e "${path}/ffprobe" ]]; then
+        (cd $path && "$(get_twitch_dl)" ffmpeg --banner false -d true)
+        [[ -e "./version.json" ]] && mv "./version.json" "${path}/bin"
+    fi
+}
+
+while [[ $# -gt 0 ]]; do 
+    case $1 in 
+        -b|--beginning)
+            BEGINNING=$(to_seconds $2)
+            shift
+            shift
+            ;;
+        -e|--ending)
+            ENDING=$(to_seconds $2)
+            shift
+            shift
+            ;;
+        -m|--mode)
+            MODE=$2
+            shift
+            shift
+            ;;
+        --twitch-dl-path)
+            TWITCH_DL_PATH=$2
+            shift
+            shift
+            ;;
+        -o|--output)
+            OUTPUT=$2
+            shift
+            shift
+            ;;
+        --ffmpeg-path)
+            FFMPEG_PATH=$2
+            shift
+            shift
+            ;;
+        -f|--font)
+            CHAT_FONT=$2
+            shift
+            shift
+            ;;
+        --emoji-vendor)
+            EMOJI_VENDOR=$2
+            shift
+            shift
+            ;;
+        *)
+            COMBINER_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${COMBINER_ARGS[@]}"
+
+if [[ -z $1 ]]; then
+    log_error "No VOD provided."
+fi
+
+MODE_FILE="${COMBINER_DIR}/modes/${MODE}.sh"
+
+if [[ ! -e "$(get_twitch_dl)" ]]; then
+    log_error "TwitchDownloaderCLI does not exist. Please provide it in --twitch-dl-path or \$PATH."
+fi
+
+if [[ -e "$MODE_FILE" ]]; then
+    VOD_ID="$1-${BEGINNING}$([[ -n $ENDING ]] && echo -n "-${ENDING}")"
+    mkdir -p "${VOD_ID}/temp"
+
+    [[ -z $FFMPEG_PATH ]] && dl_ffmpeg
+    log "Downloading VOD..."
+    $(twitch_dl "videodownload") -u $1 -o "${VOD_ID}/vod.mp4" \
+        $([[ -n $BEGINNING ]] && echo -n "-b ${BEGINNING}") \
+        $([[ -n $ENDING ]] && echo -n "-e ${ENDING}") \
+        --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")"
+    echo
+    log "Downloading chat.json..."
+    $(twitch_dl "chatdownload") -u $1 -o "${VOD_ID}/chat.json" \
+        -b $BEGINNING \
+        $([[ -n $ENDING ]] && echo -n "-e ${ENDING}")
+    echo
+    log "Processing in '${MODE}' mode..."
+    source "${MODE_FILE}"
+    cleanup
+else
+    log_error "No such processing mode as '${MODE}'"
+fi
