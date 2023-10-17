@@ -35,7 +35,7 @@ get_twitch_dl() {
 }
 
 twitch_dl() {
-    echo -n "$(get_twitch_dl) $* --banner false --temp-path ${COMBINER_DIR}/.temp"
+    echo -n "$(get_twitch_dl) $* --banner false --temp-path ${COMBINER_DIR}/.combiner-temp"
 }
 
 dl_ffmpeg() {
