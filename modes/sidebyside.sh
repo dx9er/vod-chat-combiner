@@ -3,7 +3,7 @@
 $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
     -w 340 -h 1080 \
     --update-rate 0 --dispersion true \
-    --emoji-vendor "$([[ -n $EMOJI_VENDOR ]] && echo -n "--emoji-vendor ${EMOJI_VENDOR}" || echo -n "notocolor")" \
+    $([[ -n $EMOJI_VENDOR ]] && echo -n "--emoji-vendor "${EMOJI_VENDOR}"") \
     $([[ -n $CHAT_FONT ]] && echo -n "--font "${CHAT_FONT}"") \
     --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")" && \
 # Side by side render
