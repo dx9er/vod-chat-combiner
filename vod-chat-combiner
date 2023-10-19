@@ -41,7 +41,7 @@ twitch_dl() {
 dl_ffmpeg() {
     local path="${COMBINER_DIR}/bin"
     [[ ! -e $path ]] && mkdir "$path"
-    log "Checking for ffmpeg..."
+    log "Checking for FFmpeg..."
     if [[ ! -e "${path}/ffmpeg" || ! -e "${path}/ffprobe" ]]; then
         (cd $path && "$(get_twitch_dl)" ffmpeg --banner false -d true)
         [[ -e "./version.json" ]] && mv "./version.json" "${path}/bin"
