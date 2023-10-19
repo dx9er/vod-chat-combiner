@@ -9,6 +9,7 @@ vod-chat-combiner is a Bash script which automatically processes chat replay int
 ./vod-chat-combiner [OPTIONS] VOD_ID
 ```
 where `VOD_ID` is the numbers (or "ID") in a Twitch VOD link (e.g. https://twitch.tv/videos/1954084757 is 1954084757)
+
 If `--ffmpeg-path` option is not provided and `ffmpeg` or `ffprobe` are not found in the `bin` directory, it will be automatically downloaded by TwitchDownloaderCLI.
 # Options
 - `-m|--mode` - Processing mode found in a Bash script in `modes` directory. Default is `masked`
