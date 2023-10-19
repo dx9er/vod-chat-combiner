@@ -1,26 +1,42 @@
-# vod-chat-combiner
-vod-chat-combiner is a Bash script which automatically processes chat replay into Twitch VODs through [TwitchDownloaderCLI](https://github.com/lay295/TwitchDownloader) and [FFmpeg](https://ffmpeg.org/).
+# VOD Chat Combiner
+
+**vod-chat-combiner** is a Bash script designed to automate the processing of chat replays into Twitch VODs using [TwitchDownloaderCLI](https://github.com/lay295/TwitchDownloader) and [FFmpeg](https://ffmpeg.org/).
+
 ## Prerequisites
-- A Bash supported environment such as Unix-like systems e.g. Linux (WSL if on Windows)
-- [TwitchDownloaderCLI](https://github.com/lay295/TwitchDownloader) provided through `$PATH` or the `--twitch-dl-path` option
-- A strong enough PC for processing video, better CPU means faster processing times
+
+To use vod-chat-combiner, make sure you have the following prerequisites in place:
+
+- A Bash-supported environment, such as Unix-like systems (e.g., Linux), or Windows Subsystem for Linux (WSL) if you are on Windows.
+- [TwitchDownloaderCLI](https://github.com/lay295/TwitchDownloader), either available in your `$PATH` or provided through the `--twitch-dl-path` option.
+- A sufficiently powerful PC to process video; a better CPU will result in faster processing times.
+
 ## Usage
-```
+
+You can use vod-chat-combiner with the following command:
+
+```bash
 ./vod-chat-combiner [OPTIONS] VOD_ID
 ```
-where `VOD_ID` is the numbers (or "ID") in a Twitch VOD link (e.g. https://twitch.tv/videos/1954084757 is 1954084757)
 
-If `--ffmpeg-path` option is not provided and `ffmpeg` or `ffprobe` are not found in the `bin` directory, it will be automatically downloaded by TwitchDownloaderCLI.
+Where `VOD_ID` represents the numerical identifier found in a Twitch VOD link (e.g., for the link https://twitch.tv/videos/1954084757, the `VOD_ID` is 1954084757).
+
+If the `--ffmpeg-path` option is not provided, and `ffmpeg` or `ffprobe` is not found in the `bin` directory, it will be automatically downloaded by TwitchDownloaderCLI.
+
 ## Options
-- `-m|--mode` - Processing mode found in a Bash script in `modes` directory. Default is `masked`
-- `-b|--beginning` - The beginning of where you want to crop the VOD. Supports seconds and timestamp format (HH:MM:SS)
-- `-e|--ending` - The ending of where you want to crop the VOD. Supports seconds and timestamp format (HH:MM:SS)
-- `-o|--output` - File to output processed video to. Must include extension
-- `--twitch-dl-path` - Override `$PATH` location to provide TwitchDownloaderCLI from
-- `--ffmpeg-path` - Override which FFmpeg binary to use instead of the one downloaded by TwitchDownloaderCLI
-- `-f|--font` - Which font to use in chat render. Default is provided by TwitchDownloaderCLI
-- `--emoji-vendor` - Which emoji vendor to use in chat render. Default is provided by TwitchDownloaderCLI
+
+- `-m|--mode` - Specifies the processing mode, which can be found in a Bash script in the `modes` directory. The default mode is `masked`.
+- `-b|--beginning` - Indicates the starting point for cropping the VOD, supporting input in seconds or timestamp format (HH:MM:SS).
+- `-e|--ending` - Specifies the ending point for cropping the VOD, supporting input in seconds or timestamp format (HH:MM:SS).
+- `-o|--output` - Defines the output file for the processed video, including the file extension.
+- `--twitch-dl-path` - Overrides the `$PATH` location to provide TwitchDownloaderCLI from a specific directory.
+- `--ffmpeg-path` - Allows you to specify the FFmpeg binary to use, instead of the one downloaded by TwitchDownloaderCLI.
+- `-f|--font` - Specifies the font to use for chat rendering. The default font is provided by TwitchDownloaderCLI.
+- `--emoji-vendor` - Sets the emoji vendor to use in chat rendering. The default vendor is provided by TwitchDownloaderCLI.
+
 ## Modes
-Modes are different ways to process the chat replay into your VOD. You may check and read the comments of the defaults from the [modes](/modes) directory.
+
+Modes refer to different methods for processing chat replays into your VOD. You can explore and read the comments in the default modes available in the [modes](/modes) directory.
+
 ## License
-This script is licensed under the [MIT license](/LICENSE).
+
+This script is distributed under the terms of the [MIT license](/LICENSE).
