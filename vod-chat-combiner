@@ -44,7 +44,10 @@ dl_ffmpeg() {
     log "Checking for FFmpeg..."
     if [[ ! -e "${path}/ffmpeg" || ! -e "${path}/ffprobe" ]]; then
         (cd $path && "$(get_twitch_dl)" ffmpeg --banner false -d true)
-        [[ -e "./version.json" ]] && mv "./version.json" "${path}/bin"
+        echo
+        [[ -e "./version.json" ]] && mv "./version.json" "${path}"
+        # FFprobe is needed for some processing modes but isn't made executable by TwitchDownloaderCLI
+        [[ ! -x "${path}/ffprobe" ]] && chmod +x "${path}/ffprobe"
     fi
 }
 
