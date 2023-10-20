@@ -8,6 +8,8 @@ $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
     $([[ -n $CHAT_FONT ]] && echo -n "--font "${CHAT_FONT}"") \
     --ffmpeg-path "$(get_ffmpeg_path)/ffmpeg" && \
 # Side by side render
-"$(get_ffmpeg_path)/ffmpeg" -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" -filter_complex hstack -vsync 2 \
-    -c:a copy \
+"$(get_ffmpeg_path)/ffmpeg" -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" \
+    -c:a copy -preset veryfast \
+    -filter_complex "[0:v][1:v]hstack" \
+    -r "$("$(get_ffmpeg_path)/ffprobe" -v quiet -of default=nk=1:nw=1 -select_streams v:0 -show_entries stream=r_frame_rate "${VOD_ID}/vod.mp4")" \
     "$([[ -n $OUTPUT ]] && echo -n $OUTPUT || echo -n "$VOD_ID.mp4")"
