@@ -48,6 +48,10 @@ dl_ffmpeg() {
     fi
 }
 
+get_ffmpeg_path() {
+    [[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}" || echo -n "${COMBINER_DIR}/bin"
+}
+
 while [[ $# -gt 0 ]]; do 
     case $1 in 
         -b|--beginning)
@@ -124,7 +128,7 @@ if [[ -e "$MODE_FILE" ]]; then
         $([[ -n $BEGINNING ]] && echo -n "-b ${BEGINNING}") \
         $([[ -n $ENDING ]] && echo -n "-e ${ENDING}") \
         $([[ -n $QUALITY ]] && echo -n "-q "${QUALITY}"") \
-        --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")"
+        --ffmpeg-path "$(get_ffmpeg_path)/ffmpeg"
     echo
     log "Downloading chat.json..."
     $(twitch_dl "chatdownload") -u $1 -o "${VOD_ID}/chat.json" \

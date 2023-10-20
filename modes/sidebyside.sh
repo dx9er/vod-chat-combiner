@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VOD_HEIGHT="$(ffprobe -v quiet -of default=nk=1:nw=1 -select_streams v:0 -show_entries stream=height "${VOD_ID}/vod.mp4")"
+VOD_HEIGHT="$("$(get_ffmpeg_path)/ffprobe" -v quiet -of default=nk=1:nw=1 -select_streams v:0 -show_entries stream=height "${VOD_ID}/vod.mp4")"
 $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
     -w 340 -h "${VOD_HEIGHT}" \
     --update-rate 0 --dispersion true \
@@ -8,5 +8,5 @@ $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
     $([[ -n $CHAT_FONT ]] && echo -n "--font "${CHAT_FONT}"") \
     --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")" && \
 # Side by side render
-ffmpeg -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" -filter_complex hstack \
+"$(get_ffmpeg_path)/ffmpeg" -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" -filter_complex hstack -vsync 2 \
     "$([[ -n $OUTPUT ]] && echo -n $OUTPUT || echo -n "$VOD_ID.mp4")"
