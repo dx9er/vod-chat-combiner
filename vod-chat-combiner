@@ -60,6 +60,11 @@ while [[ $# -gt 0 ]]; do
             shift
             shift
             ;;
+        -q|--quality)
+            QUALITY=$2
+            shift
+            shift
+            ;;
         -m|--mode)
             MODE=$2
             shift
@@ -118,6 +123,7 @@ if [[ -e "$MODE_FILE" ]]; then
     $(twitch_dl "videodownload") -u $1 -o "${VOD_ID}/vod.mp4" \
         $([[ -n $BEGINNING ]] && echo -n "-b ${BEGINNING}") \
         $([[ -n $ENDING ]] && echo -n "-e ${ENDING}") \
+        $([[ -n $QUALITY ]] && echo -n "-q "${QUALITY}"") \
         --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")"
     echo
     log "Downloading chat.json..."

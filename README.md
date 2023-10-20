@@ -1,4 +1,4 @@
-# VOD Chat Combiner
+# vod-chat-combiner
 
 **vod-chat-combiner** is a Bash script designed to automate the processing of chat replays into Twitch VODs using [TwitchDownloaderCLI](https://github.com/lay295/TwitchDownloader) and [FFmpeg](https://ffmpeg.org/).
 
@@ -27,6 +27,7 @@ If the `--ffmpeg-path` option is not provided, and `ffmpeg` or `ffprobe` is not 
 - `-m|--mode` - Specifies the processing mode, which can be found in a Bash script in the `modes` directory. The default mode is `masked`.
 - `-b|--beginning` - Indicates the starting point for cropping the VOD, supporting input in seconds or timestamp format (HH:MM:SS).
 - `-e|--ending` - Specifies the ending point for cropping the VOD, supporting input in seconds or timestamp format (HH:MM:SS).
+- `-q|--quality` - The video quality the VOD will be downloaded in, e.g., `1080p60` or `480p`. If not found or not provided, the VOD will be downloaded in the highest quality by default.
 - `-o|--output` - Defines the output file for the processed video, including the file extension.
 - `--twitch-dl-path` - Overrides the `$PATH` location to provide TwitchDownloaderCLI from a specific directory.
 - `--ffmpeg-path` - Allows you to specify the FFmpeg binary to use, instead of the one downloaded by TwitchDownloaderCLI.
