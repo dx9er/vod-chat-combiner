@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+VOD_HEIGHT="$(ffprobe -v quiet -of default=nk=1:nw=1 -select_streams v:0 -show_entries stream=height "${VOD_ID}/vod.mp4")"
 $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
-    -w 340 -h 1080 \
+    -w 340 -h "${VOD_HEIGHT}" \
     --update-rate 0 --dispersion true \
     $([[ -n $EMOJI_VENDOR ]] && echo -n "--emoji-vendor "${EMOJI_VENDOR}"") \
     $([[ -n $CHAT_FONT ]] && echo -n "--font "${CHAT_FONT}"") \
     --ffmpeg-path "$([[ -n $FFMPEG_PATH ]] && echo -n "${FFMPEG_PATH}/ffmpeg" || echo -n "${COMBINER_DIR}/bin/ffmpeg")" && \
 # Side by side render
-# TODO: Only supports 1080p, use ffprobe(?) to determine height
 ffmpeg -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" -filter_complex hstack \
     "$([[ -n $OUTPUT ]] && echo -n $OUTPUT || echo -n "$VOD_ID.mp4")"
