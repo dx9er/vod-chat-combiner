@@ -9,4 +9,5 @@ $(twitch_dl "chatrender") -i "${VOD_ID}/chat.json" -o "${VOD_ID}/chat.mp4" \
     --ffmpeg-path "$(get_ffmpeg_path)/ffmpeg" && \
 # Side by side render
 "$(get_ffmpeg_path)/ffmpeg" -hide_banner -y -i "${VOD_ID}/vod.mp4" -i "${VOD_ID}/chat.mp4" -filter_complex hstack -vsync 2 \
+    -c:a copy \
     "$([[ -n $OUTPUT ]] && echo -n $OUTPUT || echo -n "$VOD_ID.mp4")"
