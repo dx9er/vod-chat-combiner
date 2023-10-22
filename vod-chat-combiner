@@ -31,7 +31,12 @@ cleanup() {
 }
 
 get_twitch_dl() {
-    echo -n "$([[ -n $TWITCH_DL_PATH ]] && echo -n "${TWITCH_DL_PATH}/TwitchDownloaderCLI" || echo -n "$(type -p TwitchDownloaderCLI)")"
+    if [[ -n $TWITCH_DL_PATH ]]; then
+        local path="${TWITCH_DL_PATH}"
+        echo -n "$([[ -f "${path}" ]] && echo -n "${path}" || echo -n "${path}/TwitchDownloaderCLI")"
+    else
+        echo -n "$(type -p "TwitchDownloaderCLI")"
+    fi
 }
 
 twitch_dl() {
@@ -117,8 +122,8 @@ fi
 
 MODE_FILE="${COMBINER_DIR}/modes/${MODE}.sh"
 
-if [[ ! -e "$(get_twitch_dl)" ]]; then
-    log_error "TwitchDownloaderCLI does not exist. Please provide it in --twitch-dl-path or \$PATH."
+if [[ ! -e "$(get_twitch_dl)" || ! -x "$(get_twitch_dl)" ]]; then
+    log_error "TwitchDownloaderCLI does not exist or isn't executable. Please edit the file permissions or provide the executable in --twitch-dl-path or \$PATH."
 fi
 
 if [[ -e "$MODE_FILE" ]]; then
