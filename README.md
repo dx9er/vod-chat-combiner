@@ -32,6 +32,8 @@ If the `--ffmpeg-path` option is not provided, and `ffmpeg` or `ffprobe` is not 
 - `--twitch-dl-path` - Overrides the `$PATH` location to provide TwitchDownloaderCLI from a specific directory.
 - `--ffmpeg-path` - Allows you to specify the FFmpeg binary to use, instead of the one downloaded by TwitchDownloaderCLI.
 - `-f|--font` - Specifies the font to use for chat rendering. The default font is provided by TwitchDownloaderCLI.
+- `-w|--chat-width` - Width of the chat replay. The default width depends on the processing mode.
+- `--font-size` - Specifies the font size to use for chat rendering. The default font size is provided by TwitchDownloaderCLI.
 - `--emoji-vendor` - Sets the emoji vendor to use in chat rendering. The default vendor is provided by TwitchDownloaderCLI.
 
 ## Modes

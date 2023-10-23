@@ -102,6 +102,16 @@ while [[ $# -gt 0 ]]; do
             shift
             shift
             ;;
+        -w|--chat-width)
+            CHAT_WIDTH=$2
+            shift
+            shift
+            ;;
+        --font-size)
+            CHAT_FONT_SIZE=$2
+            shift
+            shift
+            ;;
         --emoji-vendor)
             EMOJI_VENDOR=$2
             shift
